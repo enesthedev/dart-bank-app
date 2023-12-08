@@ -1,13 +1,18 @@
 import 'dart:io';
 
 import 'package:dart_bank_app/interfaces/screen.dart';
-import 'package:dart_bank_app/screens/terminal/welcome.dart';
-import 'package:dart_bank_app/utils/isNumberInRange.dart';
+import 'package:dart_bank_app/models/account.dart';
+import 'package:dart_bank_app/screens/terminal/list_account.dart';
+import 'package:dart_bank_app/screens/terminal/open_account.dart';
+import 'package:dart_bank_app/utils/is_number_in_range.dart';
 
 class MyApp {
   final Map<int, Screen> screens = {
-    1: WelcomeScreen(),
+    1: OpenAccountScreen(),
+    2: ListAccountScreen(),
   };
+
+  final Set<Account> accounts = <Account>{};
 
   static void start() {
     final MyApp app = MyApp();
@@ -15,24 +20,27 @@ class MyApp {
   }
 
   void run() {
-    print('Welcome to the ABC Bank!');
+    print('\nWelcome to the ABC Bank!');
     print('\n1. Open an account');
-    print('2. Deposit');
-    print('3. Withdraw');
+    print('2. List Accounts');
+    print('3. Withdraw\n');
 
-    int? actionNumber;
+    final Screen screen = screens[getSelectedScreenNumber()]!;
+    screen.show(this);
+  }
+
+  int getSelectedScreenNumber() {
+    int? screenNumber;
     do {
-      print('Please enter action number to proceed:');
+      print('Please enter screen number to proceed:');
       String input = stdin.readLineSync().toString();
       try {
-        actionNumber = int.parse(input);
+        screenNumber = int.parse(input);
       } catch (e) {
         print('Invalid input. Please enter a valid number.');
       }
-    } while (actionNumber == null ||
-        !isNumberInRange(actionNumber, 1, screens.length));
-
-    final Screen screen = screens[actionNumber]!;
-    screen.show();
+    } while (screenNumber == null ||
+        !isNumberInRange(screenNumber, 1, screens.length));
+    return screenNumber;
   }
 }
