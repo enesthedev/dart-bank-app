@@ -23,24 +23,30 @@ class MyApp {
     print('\nWelcome to the ABC Bank!');
     print('\n1. Open an account');
     print('2. List Accounts');
-    print('3. Withdraw\n');
+    print('3. Exit\n');
 
-    final Screen screen = screens[getSelectedScreenNumber()]!;
+    int selectedOption = getSelectedOption();
+    if (selectedOption == 3) {
+      print('Thank you for using ABC Bank!');
+      return;
+    }
+
+    final Screen screen = screens[selectedOption]!;
     screen.show(this);
   }
 
-  int getSelectedScreenNumber() {
-    int? screenNumber;
+  int getSelectedOption() {
+    int? selectedOption;
     do {
-      print('Please enter screen number to proceed:');
+      print('Please enter number to proceed:');
       String input = stdin.readLineSync().toString();
       try {
-        screenNumber = int.parse(input);
+        selectedOption = int.parse(input);
       } catch (e) {
         print('Invalid input. Please enter a valid number.');
       }
-    } while (screenNumber == null ||
-        !isNumberInRange(screenNumber, 1, screens.length));
-    return screenNumber;
+    } while (selectedOption == null ||
+        !isNumberInRange(selectedOption, 1, screens.length));
+    return selectedOption;
   }
 }
